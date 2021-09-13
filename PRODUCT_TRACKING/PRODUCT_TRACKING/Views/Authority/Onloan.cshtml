@@ -1,0 +1,97 @@
+﻿@using PRODUCT_TRACKING.Models.Entities
+@model List<ProductProcess>
+@{
+    ViewBag.Title = "Onloan";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">On Loan Product</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>User Name-Surname</th>
+                            <th>Loan Date</th>
+                            <th>Estimated Delivery Date</th>
+                            <th colspan="2" class="text-center">Options</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>User Name-Surname</th>
+                            <th>Loan Date</th>
+                            <th>Estimated Delivery Date</th>
+                            <th colspan="2" class="text-center">Options</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.ID">
+                                <td>@item.products.ProductName</td>
+                                <td>@item.products.ProductSerialNumber</td>
+                                <td>@(item.users.Name+" "+item.users.Surname)</td>
+                                <td>@item.loanDate.ToLongDateString()</td>
+                                <td>@item.estimatedDeliveryDate.ToLongDateString()</td>
+                                <td><input type="submit" value="Take Delivery" class="btn btn-success" id="ProductTakeDelivery" onclick="ProductTakeDelivery(@item.ID)" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
+<!-- JavaScript -->
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+<!-- Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+
+<script type="text/javascript">
+    function ProductTakeDelivery(productTakeDelivery) {
+        var productTakeDelivery = {
+                ID: productTakeDelivery
+            };
+            $.ajax({
+                url: '@Url.Action("ProductTakeDelivery", "Authority")',
+                type: 'POST',
+                dataType: 'json',
+                data: productTakeDelivery,
+                success: function (data) {
+                    alertify.success('Teslim alma işlemi gerçekleştirildi.');
+                    $("#" + productTakeDelivery).fadeOut("slow");
+                }
+            });
+    }
+</script>
+
+
+

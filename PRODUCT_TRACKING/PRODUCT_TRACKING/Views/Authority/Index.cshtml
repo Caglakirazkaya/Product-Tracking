@@ -1,0 +1,178 @@
+﻿@using PRODUCT_TRACKING.Models.Entities
+@model List<Product>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Available products</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>ProductBrand</th>
+                            <th>ProductModel</th>
+                            <th>Explanation</th>
+                            <th colspan="2" class="text-center">Options</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>Product Brand</th>
+                            <th>ProductModel</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </tfoot>
+                    <tbody id="ListProduct">
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.ID">
+                                <td>@item.ProductName</td>
+                                <td>@item.ProductSerialNumber</td>
+                                <td>@item.ProductBrand</td>
+                                <td>@item.ProductModel</td>
+                                <td>@item.Explanation</td>
+                                <td><input type="submit" value="Delete" class="btn btn-danger" id="ProductDelete" onclick="ProductDelete(@item.ID)" /></td>
+                            </tr>
+                        }                       
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-success" id="modalShow">Product Add</button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Product Add</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group">
+                                <label for="Product-name" class="col-form-label">Product Name</label>
+                                <input type="text" class="form-control" id="Productname">
+                            </div>
+                            <div class="form-group">
+                                <label for="Serial-Number" class="col-form-label">Serial Number</label>
+                                <input type="text" class="form-control" id="SerialNumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="Product-Brand" class="col-form-label">Product Brand</label>
+                                <input type="text" class="form-control" id="ProductBrand">
+                            </div>
+                            <div class="form-group">
+                                <label for="Product-Model" class="col-form-label">Product Model</label>
+                                <input type="text" class="form-control" id="ProductModel">
+                            </div>
+                            <div class="form-group">
+                                <label for="Explanation" class="col-form-label">Explanation:</label>
+                                <textarea class="form-control" id="Explanation"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="btnSend">Save</button>
+                        @*<input type="submit" value="Save" class="btn btn-primary" id="btnGonder" />*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
+<!-- JavaScript -->
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+<!-- Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+
+<script type="text/javascript">
+    function ProductDelete(deleteProductId) {
+        var DeleteProduct = {
+                ID: deleteProductId
+            };
+            $.ajax({
+                url: '@Url.Action("DeleteProduct","Authority")',
+                type: 'POST',
+                dataType: 'json',
+                data: DeleteProduct,
+                success: function (data) {
+                    alertify.success('Silme işlemi gerçekleştirildi.');
+                    $("#" + deleteProductId).fadeOut("slow");
+                }
+            });
+        }
+    $(document).ready(function () {
+        $("#modalShow").click(function () {
+            $('#exampleModal').modal('show');
+        });
+        //$('#exampleModal').on('shown.bs.modal', function () {
+        //    $('#myInput').trigger('focus')
+        //});
+
+        $("#btnSend").click(function () {
+            $('#exampleModal').modal('hide');
+            var Productname = document.getElementById("Productname");
+            var SerialNumber = document.getElementById("SerialNumber");
+            var ProductBrand = document.getElementById("ProductBrand");
+            var ProductModel = document.getElementById("ProductModel");
+            var Explanation = document.getElementById("Explanation");
+//--------- JSON Verisini Bu Arada Oluşturdum--------------------
+            var AddProduct = {
+                ProductName: Productname.value,
+                ProductSerialNumber: SerialNumber.value,
+                ProductBrand: ProductBrand.value,
+                ProductModel: ProductModel.value,
+                Explanation: Explanation.value
+            };
+
+//--------- JSON Verisini Bu Arada Oluşturdum--------------------
+
+            $.ajax({
+                url: '@Url.Action("AddProduct", "Authority")',
+                type: 'POST',
+                dataType: 'json',
+                data: AddProduct,
+                success: function (data) {
+                    alertify.success('Kayıt gerçekleştirildi. ');
+                    $('#ListProduct').append('<tr id="' + data + '"><td>' + Productname.value + '</td><td>' + SerialNumber.value + '</td><td>' + ProductBrand.value + '</td><td>' + ProductModel.value + '</td><td>' + Explanation.value + '</td><td><input type="submit" value="Delete" class="btn btn-danger"  onclick="ProductDelete(' + data + ')" /></td></tr>');
+                }
+            });
+        });
+    });
+</script>
+
+

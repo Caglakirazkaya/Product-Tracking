@@ -1,0 +1,42 @@
+﻿@using PRODUCT_TRACKING.Models.Entities
+@model Product
+@{
+    ViewBag.Title = "TakeProduct";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Take Product</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Product Name</label>
+                        <input type="text" class="form-control" name="ProductName" value="@Model.ProductName" readonly="readonly">
+                        <input type="hidden" class="form-control" name="ID" value="@Model.ID" readonly="readonly">
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Time Select(Day)</label>
+                        <select class="form-control" name="TimeID" id="exampleFormControlSelect1">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }                            
+                        </select>
+                    </div> 
+                    <div class="form-group text-center">
+                        <br />
+                        <button type="submit" class="btn btn-success ">Take Product</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</main>

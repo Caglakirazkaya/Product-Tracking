@@ -1,0 +1,191 @@
+﻿@using PRODUCT_TRACKING.Models.Entities
+@model List<User>
+@{
+    ViewBag.Title = "AuthorityUser";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Users</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>User Name-Surname</th>
+                            <th>User Name</th>
+                            <th colspan="2" class="text-center">Options</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>User Name-Surname</th>
+                            <th>User Name</th>
+                            <th colspan="2" class="text-center">Options</th>
+                        </tr>
+                    </tfoot>
+                    <tbody id="ListProduct">
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.Id">
+                                <td>@(item.Name+" "+item.Surname)</td>
+                                <td>@item.username</td>
+                                <td class="text-center"><input type="submit" value="Delete" class="btn btn-danger" id="UserDelete" onclick="UserDelete(@item.Id)" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-success" id="modalShow">User Add</button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">User Add</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group">
+                                <label for="Product-name" class="col-form-label">User Name</label>
+                                <input type="text" class="form-control" id="Username">
+                            </div>
+                            <div class="form-group">
+                                <label for="Serial-Number" class="col-form-label">User Surname</label>
+                                <input type="text" class="form-control" id="Usersurname">
+                            </div>
+                            <div class="form-group">
+                                <label for="Product-Brand" class="col-form-label">Username</label>
+                                <input type="text" class="form-control" id="Username1">
+                            </div>
+                            <div class="form-group">
+                                <label for="Product-Model" class="col-form-label">Password</label>
+                                <input type="password" class="form-control" id="Password">
+                            </div>    
+                            <br />
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="Authority">
+                                <label class="form-check-label" for="exampleCheck1">Is authorized?</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="btnSend">Save</button>
+                        @*<input type="submit" value="Save" class="btn btn-primary" id="btnGonder" />*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
+<!-- JavaScript -->
+<!-- JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<!-- Semantic UI theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+<!-- Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+
+<script type="text/javascript">
+    function UserDelete(UserProductId) {
+        var DeleteUser = {
+                ID: UserProductId
+            };
+            $.ajax({
+                url: '@Url.Action("DeleteUser","Authority")',
+                type: 'POST',
+                dataType: 'json',
+                data: DeleteUser,
+                success: function (data) {
+                    alertify.success('Silme işlemi gerçekleştirildi.');
+                    $("#" + UserProductId).fadeOut("slow");
+                }
+            });
+        }
+    $(document).ready(function () {
+        $("#modalShow").click(function () {
+            $('#exampleModal').modal('show');
+        });
+        //$('#exampleModal').on('shown.bs.modal', function () {
+        //    $('#myInput').trigger('focus')
+        //});
+
+        $("#btnSend").click(function () {
+            $('#exampleModal').modal('hide');
+            var Username = document.getElementById("Username");
+            var Usersurname = document.getElementById("Usersurname");
+            var Username1 = document.getElementById("Username1");
+            var Password = document.getElementById("Password");
+            var Authority = document.getElementById("Authority");
+            checked = (Authority.checked ? '1' : '0');
+//--------- JSON Verisini Bu Arada Oluşturdum--------------------
+            var AddUser = {
+                username: Username1.value,
+                Name: Username.value,
+                Surname: Usersurname.value,
+                Password: Password.value,
+                Authority: checked
+            };
+            if (checked == true) {
+                var AddUser = {
+                    username: Username1.value,
+                    Name: Username.value,
+                    Surname: Usersurname.value,
+                    Password: Password.value,
+                    Authority: true
+                };
+            }
+            else {
+                var AddUser = {
+                    username: Username1.value,
+                    Name: Username.value,
+                    Surname: Usersurname.value,
+                    Password: Password.value,
+                    Authority: false
+                };
+            }
+
+
+//--------- JSON Verisini Bu Arada Oluşturdum--------------------
+
+            $.ajax({
+                url: '@Url.Action("AddUser", "Authority")',
+                type: 'POST',
+                dataType: 'json',
+                data: AddUser,
+                success: function (data) {
+                    alertify.success('Kayıt gerçekleştirildi. ');
+                    $('#ListProduct').append('<tr id="' + data + '"><td>' + Username.value + Usersurname.value + '</td><td>' + Username1.value + '</td></td><td class="text-center"><input type="submit" value="Delete" class="btn btn-danger"  onclick="UserDelete(' + data + ')" /></td></tr>');
+                }
+            });
+        });
+    });
+</script>
+
+

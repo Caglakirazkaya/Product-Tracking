@@ -1,0 +1,49 @@
+﻿@using PRODUCT_TRACKING.Models.Entities
+@model List<ProductProcess>
+@{
+    ViewBag.Title = "History";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Items I borrowed</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>Loan Date</th>
+                            <th>Delivery Date</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Serial Number</th>
+                            <th>Loan Date</th>
+                            <th>Delivery Date</th>
+                        </tr>
+                    </tfoot>
+                    <tbody id="ListProduct">
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.ID">
+                                <td>@item.products.ProductName</td>
+                                <td>@item.products.ProductSerialNumber</td>
+                                <td>@item.loanDate.ToLongDateString()</td>
+                                <td>@item.deliveryDate.ToLongDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
